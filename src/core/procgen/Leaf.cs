@@ -47,11 +47,12 @@ public partial class Leaf : Node
         return true;
     }
 
-    public void CarveOutRoom(int[,] dungeonMap)
+    public void CarveOutRoom(int[,] dungeonMap, int wallSpecifiedSize = 0)
     {
-        for (var x = XPos + 1; x < Width + XPos - 1; x++)
+        int wallSize = wallSpecifiedSize == 0 ? new Random().Next(1, 3) : wallSpecifiedSize;
+        for (var x = XPos + wallSize; x < Width + XPos - 1; x++)
         {
-            for (var z = ZPos + 1; z < Depth + ZPos - 1; z++)
+            for (var z = ZPos + wallSize; z < Depth + ZPos - 1; z++)
             {
                 dungeonMap[x, z] = 1;
             }

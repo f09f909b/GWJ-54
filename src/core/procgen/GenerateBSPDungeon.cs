@@ -7,6 +7,7 @@ public partial class GenerateBSPDungeon : Node
     [Export] private Mesh[] _dungeonRoomComponents;
     [Export] private int _mapDimensions = 100;
     [Export] private int _treeDepth = 2;
+    [Export] private int _wallSize;
     private int _mapWidth, _mapDepth;
     private int[,] _dungeonGridMap;
     private List<Vector2> _corridors;
@@ -52,6 +53,7 @@ public partial class GenerateBSPDungeon : Node
         }
     }
 
+
     private void Bsp(Leaf root, int treeDepth)
     {
         if (root == null) return;
@@ -60,7 +62,7 @@ public partial class GenerateBSPDungeon : Node
         {
             Vector2 leafCenter = root.CalculateCenter(root.XPos, root.ZPos, root.Depth, root.Width);
             _corridors.Add(leafCenter);
-            root.CarveOutRoom(_dungeonGridMap);
+            root.CarveOutRoom(_dungeonGridMap, _wallSize);
             return;
         }
 
@@ -74,7 +76,7 @@ public partial class GenerateBSPDungeon : Node
         {
             Vector2 leafCenter = root.CalculateCenter(root.XPos, root.ZPos, root.Depth, root.Width);
             _corridors.Add(leafCenter);
-            root.CarveOutRoom(_dungeonGridMap);
+            root.CarveOutRoom(_dungeonGridMap, _wallSize);
         }
     }
 
@@ -96,6 +98,26 @@ public partial class GenerateBSPDungeon : Node
                     (int) _corridors[i - 1].Y);
                 MarkCorridorPaths((int) _corridors[i].X, (int) _corridors[i].Y, (int) _corridors[i - 1].X,
                     (int) _corridors[i].Y);
+            }
+        }
+    }
+
+    private void AddRandomCorridors(int numOfCorridors)
+    {
+        var random = new Random();
+        for (var i = 0; i < numOfCorridors; i++)
+        {
+            int startX = random.Next(5, _mapWidth - 5);
+            int startZ = random.Next(5, _mapDepth - 5);
+            int length = random.Next(5, _mapWidth);
+            
+            if (random.Next(0, 100) < 50)
+            {
+                MarkCorridorPaths(startX, startZ, length, startZ);
+            }
+            else
+            {
+                MarkCorridorPaths(startX, startZ, startX, length);
             }
         }
     }
