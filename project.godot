@@ -10,8 +10,9 @@ config_version=5
 
 [application]
 
-config/name="JG-2"
-config/features=PackedStringArray("4.0", "GL Compatibility")
+config/name="Coorse"
+run/main_scene="res://src/locations/TutorialZone.tscn"
+config/features=PackedStringArray("4.0", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [dotnet]
