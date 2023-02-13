@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3 uid="uid://ckqjpii1dm163"]
+
+[ext_resource type="Script" path="res://src/core/player/PlayerController.cs" id="1_y5bd6"]
+[ext_resource type="Texture2D" uid="uid://cj5mrofscxv5w" path="res://icon.svg" id="2_dmhuq"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_xy4p8"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_l0m3g"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_l7sfd"]
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1_y5bd6")
+_pivotPath = NodePath("Pivot")
+_cameraPath = NodePath("Pivot/Camera3D")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_xy4p8")
+
+[node name="Pivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.760329, 0)
+
+[node name="Arms" type="Node3D" parent="Pivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.760329, 0)
+
+[node name="Left" type="Sprite3D" parent="Pivot/Arms"]
+transform = Transform3D(0.000597129, 0, -0.999096, 0, 0.186669, 0, 0.360142, 0, 0.00165654, 0.451048, 0.543312, -0.536812)
+texture = ExtResource("2_dmhuq")
+
+[node name="Right" type="Sprite3D" parent="Pivot/Arms"]
+transform = Transform3D(0.000597129, 0, -0.999096, 0, 0.186669, 0, 0.360142, 0, 0.00165654, -0.454981, 0.543312, -0.536812)
+texture = ExtResource("2_dmhuq")
+
+[node name="Camera3D" type="Camera3D" parent="Pivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0115651, 0)
+current = true
+
+[node name="Hurtbox" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hurtbox"]
+shape = SubResource("CapsuleShape3D_l0m3g")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_l7sfd")

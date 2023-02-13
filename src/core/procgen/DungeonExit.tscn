@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://fxqrxjregrej"]
+
+[ext_resource type="Script" path="res://src/core/procgen/DungeonExit.cs" id="1_e8ygg"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wkq6f"]
+size = Vector3(5, 5, 1)
+
+[node name="DungeonExit" type="Area3D"]
+transform = Transform3D(1.00169, 0, 0, 0, 1.00169, 0, 0, 0, 1.00169, 0, 0, 0)
+script = ExtResource("1_e8ygg")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1.00091, 0, 0, 0, 1.00091, 0, 0, 0, 1.00091, 0, 0, 0)
+shape = SubResource("BoxShape3D_wkq6f")

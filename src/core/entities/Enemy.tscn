@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://duk6hu5mterqy"]
+
+[ext_resource type="Script" path="res://src/core/entities/Enemy.cs" id="1_0rvxa"]
+[ext_resource type="Texture2D" uid="uid://cj5mrofscxv5w" path="res://icon.svg" id="1_4amre"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_2et6l"]
+custom_solver_bias = 0.411
+radius = 6.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5f582"]
+size = Vector3(1.4, 1.4, 1.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ld8ho"]
+
+[node name="CharacterBody3D" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00666273, 0.00890028, 0.00039041)
+script = ExtResource("1_0rvxa")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+texture = ExtResource("1_4amre")
+
+[node name="VisionArea" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="VisionArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00154305, 0.0177402, -0.00687122)
+shape = SubResource("SphereShape3D_2et6l")
+
+[node name="Hurtbox" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hurtbox"]
+transform = Transform3D(1.00031, 0, 0, 0, 1.00031, 0, 0, 0, 1.00031, 0, 0.114751, 0)
+shape = SubResource("BoxShape3D_5f582")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_ld8ho")
