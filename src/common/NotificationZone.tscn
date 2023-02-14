@@ -1,12 +1,12 @@
-[gd_scene load_steps=3 format=3 uid="uid://ct6wxgyg1q8a"]
+[gd_scene load_steps=3 format=3 uid="uid://drynw2u1vo8jf"]
 
-[ext_resource type="Script" path="res://src/core/general/NotificationZone.cs" id="1_867a6"]
+[ext_resource type="Script" path="res://src/common/NotificationZone.cs" id="1_cw30b"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_7oy5b"]
 radius = 1.0
 
 [node name="NotificationZone" type="Node3D"]
-script = ExtResource("1_867a6")
+script = ExtResource("1_cw30b")
 
 [node name="DisplayArea" type="Area3D" parent="."]
 
