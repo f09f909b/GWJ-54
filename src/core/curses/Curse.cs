@@ -3,13 +3,11 @@ using System;
 
 public partial class Curse : Node
 {
-	// Called when the node enters the scene tree for the first time.
-	public override void _Ready()
-	{
-	}
+	[Export] private string _name;
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
+	public void PlaceOnPlayer()
 	{
+		//var limbNode = GetNode();
+		//var targetLimb = limbNode.RemoveChild();
 	}
 }
