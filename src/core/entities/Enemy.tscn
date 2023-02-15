@@ -12,12 +12,14 @@ size = Vector3(1.4, 1.4, 1.4)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ld8ho"]
 
-[node name="CharacterBody3D" type="CharacterBody3D"]
+[node name="Enemy" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00666273, 0.00890028, 0.00039041)
 script = ExtResource("1_0rvxa")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
 texture = ExtResource("1_4amre")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
 
 [node name="VisionArea" type="Area3D" parent="."]
 
