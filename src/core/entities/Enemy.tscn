@@ -21,9 +21,12 @@ texture = ExtResource("1_4amre")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
 
-[node name="VisionArea" type="Area3D" parent="."]
+[node name="SightRange" type="RayCast3D" parent="."]
+target_position = Vector3(0, 0, -5)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="VisionArea"]
+[node name="HearingArea" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HearingArea"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00154305, 0.0177402, -0.00687122)
 shape = SubResource("SphereShape3D_2et6l")
 
