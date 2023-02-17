@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://nkkqp377if1y"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0svgr"]
+albedo_color = Color(0.270588, 0.776471, 0.819608, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5pa65"]
+material = SubResource("StandardMaterial3D_0svgr")
+size = Vector3(1, 2, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gsok0"]
+albedo_color = Color(0.0352941, 0.964706, 0.133333, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_dctr4"]
+material = SubResource("StandardMaterial3D_gsok0")
+size = Vector3(1, 0.5, 1)
+
+[node name="DebugTile" type="Node3D"]
+
+[node name="Debug Wall" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00374508, 0.519756, -0.00379026)
+mesh = SubResource("BoxMesh_5pa65")
+
+[node name="Debug Floor" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.31157, -0.212549, -0.00541151)
+mesh = SubResource("BoxMesh_dctr4")
