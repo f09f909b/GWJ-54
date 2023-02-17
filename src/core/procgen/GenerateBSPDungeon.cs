@@ -8,17 +8,38 @@ public partial class GenerateBSPDungeon : Node
     [Export] private int _mapDimensions = 100;
     [Export] private int _treeDepth = 2;
     [Export] private int _wallSize;
+    [Export] private bool _debugOn;
+
     private int _mapWidth, _mapDepth;
     private int[,] _dungeonGridMap;
     private List<Vector2> _corridors;
     private Leaf _root;
 
-    private void GenerateNewDungeon()
+    private GridMap _gridMap;
+
+    [Export] private NodePath _gridMapPath;
+
+    public override void _Ready()
     {
         _mapWidth = _mapDepth = _mapDimensions;
+        _dungeonGridMap = new int[_mapWidth, _mapDepth];
+        _corridors = new List<Vector2>();
         _root = new Leaf(0, 0, _mapWidth, _mapDepth);
+        
+        _gridMap = GetNode<GridMap>(_gridMapPath);
+        
+        // Dirty Flag
+        if (_debugOn)
+        {
+            GenerateNewDungeon();
+        }
+    }
+    
+    private void GenerateNewDungeon()
+    {
         InitializeGridMap();
         Bsp(_root, _treeDepth); // Carve out rooms
+        AddCorridors();
         FillInGridMapTiles();
     }
 
@@ -43,10 +64,10 @@ public partial class GenerateBSPDungeon : Node
                 switch (tileId)
                 {
                     case 0:
-                        GD.Print("Wall Tile");
+                        _gridMap.SetCellItem(new Vector3I(i, 0, j), 1); // Wall Tile
                         break;
                     case 1:
-                        GD.Print("Floor Tile");
+                        _gridMap.SetCellItem(new Vector3I(i, 0, j), 2); // Floor Title
                         break;
                 }
             }
@@ -58,9 +79,10 @@ public partial class GenerateBSPDungeon : Node
     {
         if (root == null) return;
 
-        if (treeDepth == 0)
+        if (treeDepth <= 0)
         {
             Vector2 leafCenter = root.CalculateCenter(root.XPos, root.ZPos, root.Depth, root.Width);
+            GD.Print(leafCenter);
             _corridors.Add(leafCenter);
             root.CarveOutRoom(_dungeonGridMap, _wallSize);
             return;
@@ -82,7 +104,7 @@ public partial class GenerateBSPDungeon : Node
 
     private void AddCorridors()
     {
-        for (var i = 0; i < _corridors.Count; i++)
+        for (var i = 1; i < _corridors.Count; i++)
         {
             // we mark corridors only if our solutions to leaf midpoints are either horizontal or vertical
             if ((int) _corridors[i].X == (int) _corridors[i - 1].X ||
@@ -110,7 +132,7 @@ public partial class GenerateBSPDungeon : Node
             int startX = random.Next(5, _mapWidth - 5);
             int startZ = random.Next(5, _mapDepth - 5);
             int length = random.Next(5, _mapWidth);
-            
+
             if (random.Next(0, 100) < 50)
             {
                 MarkCorridorPaths(startX, startZ, length, startZ);

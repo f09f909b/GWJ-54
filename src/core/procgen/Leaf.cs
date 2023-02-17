@@ -9,9 +9,9 @@ public partial class Leaf : Node
     public int ZPos { get; private set; }
     public int Width { get; private set; }
     public int Depth { get; private set; }
-    [Export] private int _roomMin = 10;
-    [Export] private int _roomMax;
-    [Export] private const float AspectRatio = 1.333f; // ASPECT FOR CRT DISPLAY
+    private int _roomMin = 10;
+    private int _roomMax;
+    private const float AspectRatio = 1.333f; // ASPECT FOR CRT DISPLAY
 
     public Leaf(int x, int z, int width, int depth)
     {
@@ -30,6 +30,8 @@ public partial class Leaf : Node
         bool canSplitHorizontal = CanSplitHorizontalCheck(isHorizontalBasedOnRng);
 
         _roomMax = (canSplitHorizontal ? Depth : Width) - _roomMin;
+
+        if (_roomMax <= _roomMin) return false;
 
         if (canSplitHorizontal)
         {
@@ -61,7 +63,7 @@ public partial class Leaf : Node
 
     public Vector2 CalculateCenter(int xPos, int zPos, int depth, int width)
     {
-        return new Vector2(xPos - width / 2, zPos - depth / 2);
+        return new Vector2(xPos + width / 2, zPos + depth / 2);
     }
 
     private bool CanSplitHorizontalCheck(bool isHorizontalBasedOnRng)

@@ -1,6 +1,30 @@
-[gd_scene load_steps=2 format=3 uid="uid://hh3hgydudgr8"]
+[gd_scene load_steps=4 format=3 uid="uid://hh3hgydudgr8"]
 
 [ext_resource type="Script" path="res://src/core/procgen/GenerateBSPDungeon.cs" id="1_0mv8k"]
+[ext_resource type="MeshLibrary" uid="uid://cs7kop6jw3bwv" path="res://src/core/procgen/debug/DebugTileSet.tres" id="2_f2fq8"]
+
+[sub_resource type="Environment" id="Environment_of7u4"]
+ambient_light_source = 3
+ambient_light_color = Color(1, 1, 1, 1)
 
 [node name="GenerateBSPDungeon" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.4603)
 script = ExtResource("1_0mv8k")
+_mapDimensions = 300
+_treeDepth = 5
+_debugOn = true
+_gridMapPath = NodePath("GridMap")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_of7u4")
+
+[node name="GridMap" type="GridMap" parent="."]
+mesh_library = ExtResource("2_f2fq8")
+cell_size = Vector3(1, 1, 1)
+cell_octant_size = 7
+data = {
+"cells": PackedInt32Array(305, 65069, 0, 308, 65061, 0, 65064, 191, 0, 400, 64907, 0)
+}
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 156.434, 265.372, 115.08)
