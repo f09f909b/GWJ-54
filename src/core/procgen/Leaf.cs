@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class Leaf : Node
 {
@@ -9,7 +10,7 @@ public partial class Leaf : Node
     public int ZPos { get; private set; }
     public int Width { get; private set; }
     public int Depth { get; private set; }
-    private int _roomMin = 10;
+    private int _roomMin = 15;
     private int _roomMax;
     private const float AspectRatio = 1.333f; // ASPECT FOR CRT DISPLAY
 
@@ -52,13 +53,17 @@ public partial class Leaf : Node
     public void CarveOutRoom(int[,] dungeonMap, int wallSpecifiedSize = 0)
     {
         int wallSize = wallSpecifiedSize == 0 ? new Random().Next(1, 3) : wallSpecifiedSize;
+        List<Vector2I> roomData = new();
         for (var x = XPos + wallSize; x < Width + XPos - 1; x++)
         {
             for (var z = ZPos + wallSize; z < Depth + ZPos - 1; z++)
             {
+                roomData.Add(new Vector2I(x, z));
                 dungeonMap[x, z] = 1;
             }
         }
+
+        GenerateBSPDungeon.SaveRoomsData(roomData);
     }
 
     public Vector2 CalculateCenter(int xPos, int zPos, int depth, int width)

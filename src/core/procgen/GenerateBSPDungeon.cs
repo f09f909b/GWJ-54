@@ -1,23 +1,31 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Godot.Collections;
 
 public partial class GenerateBSPDungeon : Node
 {
-    [Export] private Mesh[] _dungeonRoomComponents;
     [Export] private int _mapDimensions = 100;
     [Export] private int _treeDepth = 2;
     [Export] private int _wallSize;
+    [Export] private int _maxEnemiesToSpawn;
     [Export] private bool _debugOn;
 
     private int _mapWidth, _mapDepth;
     private int[,] _dungeonGridMap;
+    private static HashSet<List<Vector2I>> _roomsHash = new();
     private List<Vector2> _corridors;
     private Leaf _root;
 
     private GridMap _gridMap;
+    [Export] private PlayerController _player;
+    [Export] private Array<Enemy> _enemyPool;
+    [Export] private Array<Enemy> _powerUpPool;
 
     [Export] private NodePath _gridMapPath;
+    [Export] private NodePath _playerPath;
+    [Export] private NodePath _enemyPoolPath;
 
     public override void _Ready()
     {
@@ -25,22 +33,33 @@ public partial class GenerateBSPDungeon : Node
         _dungeonGridMap = new int[_mapWidth, _mapDepth];
         _corridors = new List<Vector2>();
         _root = new Leaf(0, 0, _mapWidth, _mapDepth);
-        
+
         _gridMap = GetNode<GridMap>(_gridMapPath);
-        
+
         // Dirty Flag
         if (_debugOn)
         {
             GenerateNewDungeon();
         }
     }
-    
+
+    public static void SaveRoomsData(List<Vector2I> roomData)
+    {
+        _roomsHash.Add(roomData);
+    }
+
+    public static void ClearRoomsData()
+    {
+        _roomsHash.Clear();
+    }
+
     private void GenerateNewDungeon()
     {
         InitializeGridMap();
         Bsp(_root, _treeDepth); // Carve out rooms
         AddCorridors();
         FillInGridMapTiles();
+        PlaceDownEnemies();
     }
 
     private void InitializeGridMap()
@@ -54,27 +73,6 @@ public partial class GenerateBSPDungeon : Node
         }
     }
 
-    private void FillInGridMapTiles()
-    {
-        for (var i = 0; i < _mapDimensions; i++)
-        {
-            for (var j = 0; j < _mapDimensions; j++)
-            {
-                int tileId = _dungeonGridMap[i, j];
-                switch (tileId)
-                {
-                    case 0:
-                        _gridMap.SetCellItem(new Vector3I(i, 0, j), 1); // Wall Tile
-                        break;
-                    case 1:
-                        _gridMap.SetCellItem(new Vector3I(i, 0, j), 2); // Floor Title
-                        break;
-                }
-            }
-        }
-    }
-
-
     private void Bsp(Leaf root, int treeDepth)
     {
         if (root == null) return;
@@ -82,7 +80,6 @@ public partial class GenerateBSPDungeon : Node
         if (treeDepth <= 0)
         {
             Vector2 leafCenter = root.CalculateCenter(root.XPos, root.ZPos, root.Depth, root.Width);
-            GD.Print(leafCenter);
             _corridors.Add(leafCenter);
             root.CarveOutRoom(_dungeonGridMap, _wallSize);
             return;
@@ -169,7 +166,7 @@ public partial class GenerateBSPDungeon : Node
         int numerator = longest >> 1;
         for (int i = 0; i <= longest; i++)
         {
-            _dungeonGridMap[x, y] = 2;
+            _dungeonGridMap[x, y] = 1;
             numerator += shortest;
             if (!(numerator < longest))
             {
@@ -183,5 +180,47 @@ public partial class GenerateBSPDungeon : Node
                 y += dy2;
             }
         }
+    }
+
+    private void AssignRooms()
+    {
+        
+        foreach (var hash in _roomsHash)
+        { 
+            //_roomsHash.ToList();
+            count++;
+        }
+    }
+
+    private void FillInGridMapTiles()
+    {
+        for (var i = 0; i < _mapDimensions; i++)
+        {
+            for (var j = 0; j < _mapDimensions; j++)
+            {
+                int tileId = _dungeonGridMap[i, j];
+                switch (tileId)
+                {
+                    case 0:
+                        _gridMap.SetCellItem(new Vector3I(i, 0, j), 0); // Wall Tile
+                        break;
+                    case 1:
+                        _gridMap.SetCellItem(new Vector3I(i, 0, j), 1); // Floor Title
+                        break;
+                }
+            }
+        }
+    }
+
+    private void PlaceDownPlayer()
+    {
+    }
+
+    private void PlaceDownEnemies()
+    {
+    }
+
+    private void PlaceDownExit()
+    {
     }
 }
