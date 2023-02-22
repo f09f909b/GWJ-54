@@ -1,8 +1,10 @@
 using Godot;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Godot.Collections;
+using UnnamedProject.utils;
 
 public partial class GenerateBSPDungeon : Node
 {
@@ -14,12 +16,12 @@ public partial class GenerateBSPDungeon : Node
 
     private int _mapWidth, _mapDepth;
     private int[,] _dungeonGridMap;
-    private static HashSet<List<Vector2I>> _roomsHash = new();
+    private static List<List<Vector2I>> _potentialRooms = new();
     private List<Vector2> _corridors;
     private Leaf _root;
 
     private GridMap _gridMap;
-    [Export] private PlayerController _player;
+    [Export] private PackedScene _playerPackedScene;
     [Export] private Array<Enemy> _enemyPool;
     [Export] private Array<Enemy> _powerUpPool;
 
@@ -45,12 +47,12 @@ public partial class GenerateBSPDungeon : Node
 
     public static void SaveRoomsData(List<Vector2I> roomData)
     {
-        _roomsHash.Add(roomData);
+        _potentialRooms.Add(roomData);
     }
 
     public static void ClearRoomsData()
     {
-        _roomsHash.Clear();
+        _potentialRooms.Clear();
     }
 
     private void GenerateNewDungeon()
@@ -182,21 +184,66 @@ public partial class GenerateBSPDungeon : Node
         }
     }
 
+    // TODO: Look into potential breaking this up into a calculation and get method
+    private List<int> GetDijkstraMap(Vector2I targetPosition)
+    {
+        List<int> dijkstraMap = new();
+        Godot.Collections.Dictionary<Vector2I, int> distanceLookup = new();
+        Queue<Vector2I> frontier = new Queue<Vector2I>();
+        Array<int> horizontalNeighbours = new Array<int>() {-1, 1, 0, 0};
+        Array<int> verticalNeighbours = new Array<int>() {0, 0, 1, -1};
+
+        frontier.Enqueue(targetPosition);
+
+        while (frontier.Any())
+        {
+            var current = frontier.Dequeue();
+            for (var i = 0; i < 4; i++)
+            {
+                var neighbourCoordinates =
+                    new Vector2I(current.X + horizontalNeighbours[i], current.Y + verticalNeighbours[i]);
+                var currentNeighbour =
+                    new Vector2I(neighbourCoordinates.X, neighbourCoordinates.Y);
+
+                if (distanceLookup.ContainsKey(currentNeighbour) &&
+                    _dungeonGridMap[neighbourCoordinates.X, neighbourCoordinates.Y] !=
+                    0)
+                {
+                    distanceLookup[currentNeighbour] += 1;
+                }
+                else
+                {
+                    frontier.Enqueue(currentNeighbour);
+                    distanceLookup.Add(currentNeighbour, 0);
+                }
+            }
+        }
+
+
+        foreach (var costValue in distanceLookup)
+        {
+            //dijkstraMap.Add(costValue);
+        }
+
+
+        return dijkstraMap;
+    }
+
     private void AssignRooms()
     {
-        
-        foreach (var hash in _roomsHash)
-        { 
-            //_roomsHash.ToList();
-            count++;
+        PlaceDownPlayer();
+        for (var i = 1; i < _potentialRooms.Count; i++)
+        {
+            var room = _potentialRooms[i];
+            // Assign function
         }
     }
 
     private void FillInGridMapTiles()
     {
-        for (var i = 0; i < _mapDimensions; i++)
+        for (var i = 0; i < _mapWidth; i++)
         {
-            for (var j = 0; j < _mapDimensions; j++)
+            for (var j = 0; j < _mapDepth; j++)
             {
                 int tileId = _dungeonGridMap[i, j];
                 switch (tileId)
@@ -214,6 +261,13 @@ public partial class GenerateBSPDungeon : Node
 
     private void PlaceDownPlayer()
     {
+        List<Vector2I> playerSpawnRoom = _potentialRooms.First();
+        Vector2 playerSpawnCoordinates = Utils.CalculateCenter(1, 2, 3, 4);
+
+        var player = _playerPackedScene.Instantiate<PlayerController>();
+        player.GlobalPosition = new Vector3(playerSpawnCoordinates.X, 0, playerSpawnCoordinates.Y);
+
+        GetTree().Root.GetNode<Node3D>("Level").AddChild(player);
     }
 
     private void PlaceDownEnemies()
