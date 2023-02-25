@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://f8a16kh7o01m"]
+
+[ext_resource type="Script" path="res://src/core/weapon/HitScanEmitter.cs" id="1_p3grv"]
+
+[node name="HitScanEmitter" type="Node3D"]
+script = ExtResource("1_p3grv")
+_aimCastPath = NodePath("AimCast")
+
+[node name="AimCast" type="RayCast3D" parent="."]
