@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class CurseResource : Resource
+public partial class CurseData : Resource
 {
     public enum Limbs
     {
@@ -20,4 +20,6 @@ public partial class CurseResource : Resource
     [Export] public int DamageAdjustment { get; private set; }
     [Export] public int SpeedAdjustment { get; private set; }
     [Export] public int DefenseAdjustment { get; private set; }
+    [Export] public MeshInstance3D CursedModel { get; private set; }
+    [Export] public PackedScene CursePackedScene { get; private set; }
 }
