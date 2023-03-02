@@ -1,5 +1,4 @@
 using Godot;
-using System;
 
 public partial class CurseData : Resource
 {
@@ -21,5 +20,7 @@ public partial class CurseData : Resource
     [Export] public int SpeedAdjustment { get; private set; }
     [Export] public int DefenseAdjustment { get; private set; }
     [Export] public MeshInstance3D CursedModel { get; private set; }
-    [Export] public PackedScene CursePackedScene { get; private set; }
+    [Export] public string CursePath { get; private set; }
+
+
 }
